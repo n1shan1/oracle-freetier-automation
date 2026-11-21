@@ -85,15 +85,15 @@ ps aux --sort=-%cpu | head -10
 
 ## ⏰ Periodic Status Reports (Telegram)
 
-The included `send_status_update.py` script sends automated progress digests to your Telegram chat.
+The included `scripts/send_status_update.py` script sends automated progress digests to your Telegram chat.
 
 ```bash
 # Trigger a report manually
-python3 ~/oracle-freetier-automation/send_status_update.py
+python3 ~/oracle-freetier-automation/scripts/send_status_update.py
 
 # Add to crontab to run every 2 hours:
 # (crontab -e)
-0 */2 * * * /usr/bin/python3 /home/ubuntu/oracle-freetier-automation/send_status_update.py >> /home/ubuntu/status_cron.log 2>&1
+0 */2 * * * /usr/bin/python3 /home/ubuntu/oracle-freetier-automation/scripts/send_status_update.py >> /home/ubuntu/status_cron.log 2>&1
 ```
 
 ---

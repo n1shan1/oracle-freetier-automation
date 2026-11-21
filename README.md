@@ -18,7 +18,7 @@ Due to immense global demand, acquiring Oracle's Always-Free ARM resources often
 - **🛡️ Production-Grade Security Hardening:** One-click script to enforce UFW (deny-all firewall), Fail2ban brute-force defense, key-only SSH, disabled root login, and automated security upgrades.
 - **📲 Instant Multi-Channel Alerts:** Immediate notifications via **Telegram**, **Discord**, and **Gmail** the second your instance is provisioned.
 - **⏰ 2-Hour Progress Digests:** Automated cron job posts periodic status reports to Telegram with total attempt counts, server load, and error tracking.
-- **💰 100% Always-Free Compliant:** Built-in auditing script (`audit_costs.py`) verifies your tenancy strictly stays within the \$0.00 free tier limits.
+- **💰 100% Always-Free Compliant:** Built-in auditing script (`scripts/audit_costs.py`) verifies your tenancy strictly stays within the \$0.00 free tier limits.
 
 ---
 
@@ -122,7 +122,7 @@ Instead of keeping your Mac or PC powered on indefinitely, launch a free Micro V
 
 1. **Launch the Free Micro Runner:**
    ```bash
-   python3 create_micro.py
+   python3 scripts/create_micro.py
    ```
 2. **Deploy the Sniper on the Runner:**
    ```bash
@@ -174,10 +174,10 @@ Keep track of your sniper without manually checking logs:
 
 ```bash
 # Test status report manually
-python3 send_status_update.py
+python3 scripts/send_status_update.py
 
 # Add to crontab on the runner VM (runs every 2 hours)
-(crontab -l 2>/dev/null; echo "0 */2 * * * /usr/bin/python3 $HOME/oracle-freetier-automation/send_status_update.py >> $HOME/status_cron.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "0 */2 * * * /usr/bin/python3 $HOME/oracle-freetier-automation/scripts/send_status_update.py >> $HOME/status_cron.log 2>&1") | crontab -
 ```
 
 Sample Telegram Notification:
@@ -199,7 +199,7 @@ Sample Telegram Notification:
 To confirm that your resources incur strictly **$0.00**, run the included audit utility:
 
 ```bash
-python3 audit_costs.py
+python3 scripts/audit_costs.py
 ```
 
 Expected output:

@@ -6,7 +6,8 @@ import datetime
 import requests
 from dotenv import load_dotenv
 
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPTS_DIR)
 LOG_FILE = os.path.join(PROJECT_DIR, "launch_instance.log")
 SUCCESS_FILE = os.path.join(PROJECT_DIR, "INSTANCE_CREATED")
 ENV_FILE = os.path.join(PROJECT_DIR, "oci.env")

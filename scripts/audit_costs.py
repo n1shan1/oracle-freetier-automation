@@ -8,10 +8,20 @@ Script to audit OCI resources and check for any potential costs:
 """
 import oci
 import os
-import json
-import requests
+import sys
+from dotenv import load_dotenv
 
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "oci_config")
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPTS_DIR)
+ENV_FILE = os.path.join(PROJECT_DIR, "oci.env")
+if os.path.exists(ENV_FILE):
+    load_dotenv(ENV_FILE)
+
+CONFIG_FILE = os.getenv("OCI_CONFIG", os.path.join(PROJECT_DIR, "oci_config"))
+if not os.path.exists(CONFIG_FILE):
+    print(f"Error: Config file not found at {CONFIG_FILE}. Refer to oci_config.example.")
+    sys.exit(1)
+
 config = oci.config.from_file(CONFIG_FILE)
 tenancy_id = config["tenancy"]
 
@@ -28,7 +38,6 @@ for inst in active_instances:
 
 # 2. Boot and Block Volumes
 print("\n=== 2. STORAGE AUDIT (Free Tier Limit: 200 GB) ===")
-# List ADs
 ads = identity_client.list_availability_domains(compartment_id=tenancy_id).data
 total_volume_gb = 0
 
