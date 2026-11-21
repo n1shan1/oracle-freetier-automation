@@ -1,0 +1,71 @@
+# ==========================================
+# Sensitive Credentials & Keys (NEVER COMMIT)
+# ==========================================
+*.pem
+*.key
+*id_rsa*
+oci_config
+!oci_config.example
+!sample_oci_config
+oci.env
+oci.env.bak
+!oci.env.example
+
+# ==========================================
+# Instance Artifacts & State
+# ==========================================
+INSTANCE_CREATED
+images_list.json
+
+# ==========================================
+# Logs
+# ==========================================
+*.log
+launchd_stdout.log
+launchd_stderr.log
+status_cron.log
+UNHANDLED_ERROR.log
+ERROR_IN_CONFIG.log
+
+# ==========================================
+# Python Virtual Environments & Cache
+# ==========================================
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==========================================
+# OS & IDE Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
