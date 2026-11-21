@@ -60,8 +60,12 @@ cat ~/oracle-freetier-automation/INSTANCE_CREATED
 
 ## 🔒 Security & Hardening Commands
 
-Ensure your runner host is hardened against unauthorized access:
+### Run Automated Security Hardening
+```bash
+bash ~/oracle-freetier-automation/scripts/harden_server.sh
+```
 
+### Inspect Security Status on Runner
 ```bash
 # Check UFW firewall status
 sudo ufw status verbose

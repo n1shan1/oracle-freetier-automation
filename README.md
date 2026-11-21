@@ -118,26 +118,53 @@ Key variables to verify:
 ### 3. Execution Options
 
 #### Option A: Running 24/7 on a Free Cloud VM (Recommended)
-Instead of keeping your Mac or PC powered on indefinitely, launch a free Micro VM that runs the sniper inside Oracle's datacenter:
+Instead of keeping your Mac or PC powered on indefinitely, you can deploy the sniper onto an Always-Free `VM.Standard.E2.1.Micro` instance that runs 24/7 directly inside Oracle's datacenter:
 
-1. **Launch the Free Micro Runner:**
+1. **Prepare Networking (Subnet & Security List):**
+   ```bash
+   python3 scripts/create_subnet.py
+   python3 scripts/open_ports.py
+   ```
+
+2. **Launch the Free Micro Runner VM:**
    ```bash
    python3 scripts/create_micro.py
    ```
-2. **Deploy the Sniper on the Runner:**
+   *(Note the public IP printed at the end, e.g. `129.225.x.x`)*
+
+3. **Copy Configuration & Credentials to the Runner:**
    ```bash
-   ssh ubuntu@<RUNNER_PUBLIC_IP> -i id_rsa_private
-   git clone https://github.com/<your-username>/oracle-freetier-automation.git
-   cd oracle-freetier-automation
-   screen -dmS oracle bash setup_init.sh
-   ```
-3. **Attach / Detach Session:**
-   ```bash
-   screen -r oracle   # View live output
-   # Press Ctrl+A then D to detach safely
+   scp -i id_rsa_private oci_config oci.env *.pem ubuntu@<RUNNER_IP>:~/
    ```
 
-#### Option B: Running Locally
+4. **Connect via SSH & Set Up the Repository:**
+   ```bash
+   ssh ubuntu@<RUNNER_IP> -i id_rsa_private
+
+   # On the remote runner:
+   git clone https://github.com/<your-username>/oracle-freetier-automation.git
+   cd oracle-freetier-automation
+   mv ~/oci_config ~/oci.env ~/*.pem .
+   ```
+
+5. **Apply One-Click Security Hardening:**
+   ```bash
+   # Configures UFW firewall, Fail2ban, SSH key-only access, and auto-updates
+   bash scripts/harden_server.sh
+   ```
+
+6. **Start the Sniper in a Detached Background Session:**
+   ```bash
+   screen -dmS oracle bash setup_init.sh
+   ```
+
+7. **Monitor or Detach:**
+   ```bash
+   screen -r oracle   # View live output
+   # Press Ctrl+A then D to safely detach (sniper keeps running!)
+   ```
+
+#### Option B: Running Locally on your Laptop
 ```bash
 # Automated setup (creates venv and installs dependencies)
 ./setup_init.sh
@@ -150,21 +177,23 @@ Instead of keeping your Mac or PC powered on indefinitely, launch a free Micro V
 
 ## 🔒 Security Hardening (Cloud Runner)
 
-To protect your 24/7 cloud runner from unauthorized access, brute-force bots, or cryptocurrency miners, apply our hardening baseline on the VM:
+To protect your 24/7 cloud runner from unauthorized access, brute-force bots, or cryptocurrency miners, run the included hardening script directly on the VM:
 
 ```bash
 # SSH into the runner VM
 ssh ubuntu@<RUNNER_IP> -i path/to/id_rsa_private
 
-# Run hardening
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw allow 22/tcp comment 'SSH'
-sudo ufw --force enable
-
-sudo apt-get install -y fail2ban unattended-upgrades
-sudo systemctl enable --now fail2ban
+# Run automated hardening baseline
+cd oracle-freetier-automation
+bash scripts/harden_server.sh
 ```
+
+What `scripts/harden_server.sh` automatically configures:
+- 🛡️ **UFW Firewall:** Default `DENY` for all incoming traffic; only allows SSH port `22/tcp`.
+- 🚫 **Fail2ban:** 3 failed SSH authentication attempts trigger an automatic 24-hour IP ban.
+- 🔑 **SSH Lockdown:** Disables password login (`PasswordAuthentication no`) and root login (`PermitRootLogin no`). Only private keys are accepted.
+- 🔄 **Auto-Updates:** Enables `unattended-upgrades` to automatically install OS security patches.
+- ⚙️ **Kernel Security:** Enforces TCP SYN-flood defense, drops ICMP redirects, disables IP forwarding.
 
 ---
 
